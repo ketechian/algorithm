@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.ClassMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Class">
+    <id column="cl_id" jdbcType="INTEGER" property="clId" />
+    <result column="cl_name" jdbcType="VARCHAR" property="clName" />
+    <result column="cl_create_time" jdbcType="TIMESTAMP" property="clCreateTime" />
+    <result column="cl_end_time" jdbcType="TIMESTAMP" property="clEndTime" />
+    <result column="cl_status" jdbcType="VARCHAR" property="clStatus" />
+    <result column="cl_introduce" jdbcType="VARCHAR" property="clIntroduce" />
+    <result column="cl_picture_id" jdbcType="INTEGER" property="clPictureId" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    cl_id, cl_name, cl_create_time, cl_end_time, cl_status, cl_introduce, cl_picture_id, 
+    is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from  algorithm.class
+    where cl_id = #{clId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByName" resultType="com.example.algorithm.domain.po.Class">
+    select
+    <include refid="Base_Column_List" />
+    from  algorithm.class
+    where cl_name = #{className,jdbcType=INTEGER}
+    and is_delete = 1
+  </select>
+  <select id="selectByClassId" resultType="com.example.algorithm.domain.vo.ClassVo">
+    select
+    <include refid="Base_Column_List" />
+    from  algorithm.class
+    where 1 = 1
+    and is_delete = 1
+      and cl_id in
+    <foreach collection="classIdList"  item="item" index ="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    order by create_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from  algorithm.class
+    where cl_id = #{clId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="cl_id" keyProperty="clId" parameterType="com.example.algorithm.domain.po.Class" useGeneratedKeys="true">
+    <selectKey keyProperty="clId" order="AFTER" resultType="Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into  algorithm.class (cl_name, cl_create_time, cl_end_time,
+      cl_status, cl_introduce, cl_picture_id, 
+      is_delete, create_time, modify_time
+      )
+    values (#{clName,jdbcType=VARCHAR}, #{clCreateTime,jdbcType=TIMESTAMP}, #{clEndTime,jdbcType=TIMESTAMP}, 
+      #{clStatus,jdbcType=VARCHAR}, #{clIntroduce,jdbcType=VARCHAR}, #{clPictureId,jdbcType=INTEGER}, 
+      1, now(), now())
+  </insert>
+  <insert id="insertSelective" keyColumn="cl_id" keyProperty="clId" parameterType="com.example.algorithm.domain.po.Class" useGeneratedKeys="true">
+    insert into algorithm.class
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="clName != null">
+        cl_name,
+      </if>
+      <if test="clCreateTime != null">
+        cl_create_time,
+      </if>
+      <if test="clEndTime != null">
+        cl_end_time,
+      </if>
+      <if test="clStatus != null">
+        cl_status,
+      </if>
+      <if test="clIntroduce != null">
+        cl_introduce,
+      </if>
+      <if test="clPictureId != null">
+        cl_picture_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="clName != null">
+        #{clName,jdbcType=VARCHAR},
+      </if>
+      <if test="clCreateTime != null">
+        #{clCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clEndTime != null">
+        #{clEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clStatus != null">
+        #{clStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="clIntroduce != null">
+        #{clIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="clPictureId != null">
+        #{clPictureId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.Class">
+    update algorithm.class
+    <set>
+      <if test="clName != null">
+        cl_name = #{clName,jdbcType=VARCHAR},
+      </if>
+      <if test="clCreateTime != null">
+        cl_create_time = #{clCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clEndTime != null">
+        cl_end_time = #{clEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clStatus != null">
+        cl_status = #{clStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="clIntroduce != null">
+        cl_introduce = #{clIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="clPictureId != null">
+        cl_picture_id = #{clPictureId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where cl_id = #{clId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Class">
+    update algorithm.class
+    set cl_name = #{clName,jdbcType=VARCHAR},
+      cl_create_time = #{clCreateTime,jdbcType=TIMESTAMP},
+      cl_end_time = #{clEndTime,jdbcType=TIMESTAMP},
+      cl_status = #{clStatus,jdbcType=VARCHAR},
+      cl_introduce = #{clIntroduce,jdbcType=VARCHAR},
+      cl_picture_id = #{clPictureId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where cl_id = #{clId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.TaskGroupMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.TaskGroup">
+    <id column="tg_id" jdbcType="INTEGER" property="tgId" />
+    <result column="tg_topic_id" jdbcType="VARCHAR" property="tgTopicId" />
+    <result column="tg_for_id" jdbcType="INTEGER" property="tgForId" />
+    <result column="tg_from_class" jdbcType="INTEGER" property="tgFromClass" />
+    <result column="tg_should" jdbcType="INTEGER" property="tgShould" />
+    <result column="tg_actual" jdbcType="INTEGER" property="tgActual" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    tg_id, tg_topic_id, tg_for_id, tg_from_class, tg_should, tg_actual, is_delete, create_time, 
+    modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.task_group
+    where tg_id = #{tgId,jdbcType=INTEGER}
+  </select>
+  <select id="countByTeacher" resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM algorithm.task_group
+    WHERE tg_for_id = #{teacherId,jdbcType=INTEGER}
+    and is_delete = 1
+  </select>
+  <select id="selectByTeacherId" resultType="com.example.algorithm.domain.po.TaskGroup">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.task_group
+    where tg_for_id = #{teacherId,jdbcType=INTEGER}
+    and is_delete = 1
+    LIMIT #{start},#{count}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.task_group
+    where tg_id = #{tgId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="tg_id" keyProperty="tgId" parameterType="com.example.algorithm.domain.po.TaskGroup" useGeneratedKeys="true">
+    <selectKey keyProperty="tgId" order="AFTER" resultType="Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into algorithm.task_group (tg_topic_id, tg_for_id, tg_from_class,
+      tg_should, tg_actual, is_delete, 
+      create_time, modify_time)
+    values (#{tgTopicId,jdbcType=VARCHAR}, #{tgForId,jdbcType=INTEGER}, #{tgFromClass,jdbcType=INTEGER}, 
+      #{tgShould,jdbcType=INTEGER}, #{tgActual,jdbcType=INTEGER}, 1, now(), now())
+  </insert>
+  <insert id="insertSelective" keyColumn="tg_id" keyProperty="tgId" parameterType="com.example.algorithm.domain.po.TaskGroup" useGeneratedKeys="true">
+    insert into algorithm.task_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tgTopicId != null">
+        tg_topic_id,
+      </if>
+      <if test="tgForId != null">
+        tg_for_id,
+      </if>
+      <if test="tgFromClass != null">
+        tg_from_class,
+      </if>
+      <if test="tgShould != null">
+        tg_should,
+      </if>
+      <if test="tgActual != null">
+        tg_actual,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tgTopicId != null">
+        #{tgTopicId,jdbcType=VARCHAR},
+      </if>
+      <if test="tgForId != null">
+        #{tgForId,jdbcType=INTEGER},
+      </if>
+      <if test="tgFromClass != null">
+        #{tgFromClass,jdbcType=INTEGER},
+      </if>
+      <if test="tgShould != null">
+        #{tgShould,jdbcType=INTEGER},
+      </if>
+      <if test="tgActual != null">
+        #{tgActual,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.TaskGroup">
+    update algorithm.task_group
+    <set>
+      <if test="tgTopicId != null">
+        tg_topic_id = #{tgTopicId,jdbcType=VARCHAR},
+      </if>
+      <if test="tgForId != null">
+        tg_for_id = #{tgForId,jdbcType=INTEGER},
+      </if>
+      <if test="tgFromClass != null">
+        tg_from_class = #{tgFromClass,jdbcType=INTEGER},
+      </if>
+      <if test="tgShould != null">
+        tg_should = #{tgShould,jdbcType=INTEGER},
+      </if>
+      <if test="tgActual != null">
+        tg_actual = #{tgActual,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where tg_id = #{tgId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.TaskGroup">
+    update algorithm.task_group
+    set tg_topic_id = #{tgTopicId,jdbcType=VARCHAR},
+      tg_for_id = #{tgForId,jdbcType=INTEGER},
+      tg_from_class = #{tgFromClass,jdbcType=INTEGER},
+      tg_should = #{tgShould,jdbcType=INTEGER},
+      tg_actual = #{tgActual,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where tg_id = #{tgId,jdbcType=INTEGER}
+  </update>
+    <update id="updateRight">
+      update algorithm.task_group
+      set
+        tg_actual = tg_actual + 1
+      where is_delete = 1
+    </update>
+</mapper>

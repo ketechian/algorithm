@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.TaskMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Task">
+    <id column="tk_id" jdbcType="INTEGER" property="tkId" />
+    <result column="tk_father_id" jdbcType="INTEGER" property="tkFatherId" />
+    <result column="tk_from_id" jdbcType="INTEGER" property="tkFromId" />
+    <result column="tk_topic_id" jdbcType="INTEGER" property="tkTopicId" />
+    <result column="tk_check" jdbcType="BOOLEAN" property="tkCheck" />
+    <result column="tk_over" jdbcType="BOOLEAN" property="tkOver" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    tk_id, tk_father_id, tk_from_id, tk_topic_id, tk_check, tk_over, is_delete, create_time, 
+    modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.task
+    where tk_id = #{tkId,jdbcType=INTEGER}
+  </select>
+    <select id="selectByFromId" resultType="com.example.algorithm.domain.vo.TaskAllVo">
+      select
+      <include refid="Base_Column_List" />
+      from algorithm.task
+      where tk_from_id = #{studentId,jdbcType=INTEGER}
+      and is_delete = 1
+      order by create_time desc
+      LIMIT #{start},#{count}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.task
+    where tk_id = #{tkId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="tk_id" keyProperty="tkId" parameterType="com.example.algorithm.domain.po.Task" useGeneratedKeys="true">
+    insert into algorithm.task (tk_father_id, tk_from_id, tk_topic_id,
+      tk_check, tk_over, is_delete, 
+      create_time, modify_time)
+    values (#{tkFatherId,jdbcType=INTEGER}, #{tkFromId,jdbcType=INTEGER}, #{tkTopicId,jdbcType=INTEGER}, 
+      #{tkCheck,jdbcType=BOOLEAN}, #{tkOver,jdbcType=BOOLEAN}, 1, now(), now())
+  </insert>
+
+    <insert id="insertGroup">
+      insert into algorithm.task (tk_father_id, tk_from_id, tk_topic_id,
+      tk_check, tk_over, is_delete,
+      create_time, modify_time)
+      values
+      <foreach collection="studentList" item="imFromId" separator=",">
+        (#{fatherId,jdbcType=INTEGER}, #{imFromId,jdbcType=INTEGER}, #{topicId,jdbcType=INTEGER},
+        2, 2, 1, now(), now())
+      </foreach>
+    </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Task">
+    update algorithm.task
+    set tk_father_id = #{tkFatherId,jdbcType=INTEGER},
+      tk_from_id = #{tkFromId,jdbcType=INTEGER},
+      tk_topic_id = #{tkTopicId,jdbcType=INTEGER},
+      tk_check = #{tkCheck,jdbcType=INTEGER},
+      tk_over = #{tkOver,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where tk_id = #{tkId,jdbcType=INTEGER}
+  </update>
+  <update id="checkTask">
+    update algorithm.task
+    set tk_check = 1
+    where tk_id = #{taskId,jdbcType=INTEGER}
+    and is_delete = 1
+  </update>
+  <update id="updateOver">
+    update algorithm.task
+    set tk_over = 1
+    where tk_id = #{taskId,jdbcType=INTEGER}
+    and is_delete = 1
+  </update>
+</mapper>

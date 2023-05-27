@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.AdminMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Admin">
+    <id column="ad_id" jdbcType="INTEGER" property="adId" />
+    <result column="ad_number" jdbcType="VARCHAR" property="adNumber" />
+    <result column="ad_name" jdbcType="VARCHAR" property="adName" />
+    <result column="ad_phone" jdbcType="VARCHAR" property="adPhone" />
+    <result column="ad_password" jdbcType="VARCHAR" property="adPassword" />
+    <result column="ad_mailbox" jdbcType="VARCHAR" property="adMailbox" />
+    <result column="ad_picture_id" jdbcType="INTEGER" property="adPictureId" />
+    <result column="ad_role_id" jdbcType="INTEGER" property="adRoleId" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ad_id, ad_number, ad_name, ad_phone, ad_password, ad_mailbox, ad_picture_id, ad_role_id, 
+    is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.admin
+    where ad_id = #{adId,jdbcType=INTEGER}
+  </select>
+  <select id="adminLogin" resultType="com.example.algorithm.domain.po.Admin">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.admin
+    where ad_id = #{adId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from  algorithm.admin
+    where ad_number = #{adNumber,jdbcType=INTEGER}
+    AND ad_password = #{adPassword,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ad_id" keyProperty="adId" parameterType="com.example.algorithm.domain.po.Admin" useGeneratedKeys="true">
+    insert into  algorithm.admin (ad_number, ad_name, ad_phone,
+      ad_password, ad_mailbox, ad_picture_id, 
+      ad_role_id, is_delete, create_time, 
+      modify_time)
+    values (#{adNumber,jdbcType=VARCHAR}, #{adName,jdbcType=VARCHAR}, #{adPhone,jdbcType=VARCHAR}, 
+      #{adPassword,jdbcType=VARCHAR}, #{adMailbox,jdbcType=VARCHAR}, #{adPictureId,jdbcType=INTEGER}, 
+      #{adRoleId,jdbcType=INTEGER}, 1, now(), now()
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="ad_id" keyProperty="adId" parameterType="com.example.algorithm.domain.po.Admin" useGeneratedKeys="true">
+    insert into  algorithm.admin
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adNumber != null">
+        ad_number,
+      </if>
+      <if test="adName != null">
+        ad_name,
+      </if>
+      <if test="adPhone != null">
+        ad_phone,
+      </if>
+      <if test="adPassword != null">
+        ad_password,
+      </if>
+      <if test="adMailbox != null">
+        ad_mailbox,
+      </if>
+      <if test="adPictureId != null">
+        ad_picture_id,
+      </if>
+      <if test="adRoleId != null">
+        ad_role_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adNumber != null">
+        #{adNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="adName != null">
+        #{adName,jdbcType=VARCHAR},
+      </if>
+      <if test="adPhone != null">
+        #{adPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="adPassword != null">
+        #{adPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adMailbox != null">
+        #{adMailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="adPictureId != null">
+        #{adPictureId,jdbcType=INTEGER},
+      </if>
+      <if test="adRoleId != null">
+        #{adRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.Admin">
+    update  algorithm.admin
+    <set>
+      <if test="adNumber != null">
+        ad_number = #{adNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="adName != null">
+        ad_name = #{adName,jdbcType=VARCHAR},
+      </if>
+      <if test="adPhone != null">
+        ad_phone = #{adPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="adPassword != null">
+        ad_password = #{adPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adMailbox != null">
+        ad_mailbox = #{adMailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="adPictureId != null">
+        ad_picture_id = #{adPictureId,jdbcType=INTEGER},
+      </if>
+      <if test="adRoleId != null">
+        ad_role_id = #{adRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ad_id = #{adId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Admin">
+    update  algorithm.admin
+    set ad_number = #{adNumber,jdbcType=VARCHAR},
+      ad_name = #{adName,jdbcType=VARCHAR},
+      ad_phone = #{adPhone,jdbcType=VARCHAR},
+      ad_password = #{adPassword,jdbcType=VARCHAR},
+      ad_mailbox = #{adMailbox,jdbcType=VARCHAR},
+      ad_picture_id = #{adPictureId,jdbcType=INTEGER},
+      ad_role_id = #{adRoleId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where ad_id = #{adId,jdbcType=INTEGER}
+  </update>
+</mapper>

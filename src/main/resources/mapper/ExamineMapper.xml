@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.ExamineMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Examine">
+    <id column="ex_id" jdbcType="INTEGER" property="exId" />
+    <result column="ex_for_id" jdbcType="INTEGER" property="exForId" />
+    <result column="ex_from_id" jdbcType="INTEGER" property="exFromId" />
+    <result column="ex_topic_id" jdbcType="INTEGER" property="exTopicId" />
+    <result column="ex_hyperlinks_id" jdbcType="INTEGER" property="exHyperlinksId" />
+    <result column="ex_answer_id" jdbcType="INTEGER" property="exAnswerId" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ex_id, ex_for_id, ex_from_id, ex_topic_id, ex_hyperlinks_id, ex_answer_id, ex_check, is_delete,
+    create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.examine
+    where ex_id = #{exId,jdbcType=INTEGER}
+    and is_delete = 1
+  </select>
+  <select id="countAllByTeacherId" resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM algorithm.examine
+    WHERE ex_from_id = #{teacherId,jdbcType=INTEGER}
+    AND is_delete = 1
+  </select>
+  <select id="selectByFromId" resultType="com.example.algorithm.domain.po.Examine">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.examine
+    where ex_from_id = #{teacherId,jdbcType=INTEGER}
+    and is_delete = 1
+    LIMIT #{start},#{count}
+  </select>
+  <select id="countNotProcessedByTeacherId" resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM algorithm.examine
+    WHERE ex_from_id = #{teacherId,jdbcType=INTEGER}
+      and ex_check = 2
+      AND is_delete = 1
+  </select>
+  <select id="selectNotProcessedByFromId" resultType="com.example.algorithm.domain.po.Examine">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.examine
+    where ex_from_id = #{teacherId,jdbcType=INTEGER}
+    and ex_check = 2
+    and is_delete = 1
+    LIMIT #{start},#{count}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.examine
+    where ex_id = #{exId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ex_id" keyProperty="exId" parameterType="com.example.algorithm.domain.po.Examine" useGeneratedKeys="true">
+    insert into algorithm.examine (ex_for_id, ex_from_id, ex_topic_id,
+      ex_hyperlinks_id, ex_answer_id, is_delete, 
+      create_time, modify_time, ex_check)
+    values (#{exForId,jdbcType=INTEGER}, #{exFromId,jdbcType=INTEGER}, #{exTopicId,jdbcType=INTEGER},
+      #{exHyperlinksId,jdbcType=INTEGER}, #{exAnswerId,jdbcType=INTEGER}, 1, now(), now(), 2)
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Examine">
+    update algorithm.examine
+    set ex_for_id = #{exForId,jdbcType=INTEGER},
+      ex_from_id = #{exFromId,jdbcType=INTEGER},
+      ex_topic_id = #{exClassId,jdbcType=INTEGER},
+      ex_hyperlinks_id = #{exHyperlinksId,jdbcType=INTEGER},
+      ex_answer_id = #{exAnswerId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where ex_id = #{exId,jdbcType=INTEGER}
+  </update>
+  <update id="checkByPrimaryKey">
+    update algorithm.examine
+    set ex_check = 1
+    where ex_id = #{examineId,jdbcType=INTEGER}
+    and is_delete = 1
+  </update>
+</mapper>

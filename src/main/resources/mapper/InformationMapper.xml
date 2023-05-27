@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.InformationMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Information">
+    <id column="im_id" jdbcType="INTEGER" property="imId" />
+    <result column="im_father_id" jdbcType="INTEGER" property="imFatherId" />
+    <result column="im_from_id" jdbcType="INTEGER" property="imFromId" />
+    <result column="is_check" jdbcType="BOOLEAN" property="isCheck" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    im_id, im_father_id, im_from_id, is_check, is_delete, create_time, modify_time, im_text, im_role_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.information
+    where im_id = #{imId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByFromId" resultType="com.example.algorithm.domain.po.Information">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.information
+    where im_from_id = #{Id,jdbcType=INTEGER}
+    and is_delete = 1
+    order by create_time desc
+    LIMIT #{start},#{count}
+  </select>
+  <select id="countById" resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM algorithm.information
+    WHERE im_from_id = #{teacherId,jdbcType=INTEGER}
+      and im_role_id = #{roleId}
+      AND is_delete = 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.information
+    where im_id = #{imId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="im_id" keyProperty="imId" parameterType="com.example.algorithm.domain.po.Information" useGeneratedKeys="true">
+    insert into algorithm.information (im_father_id, im_from_id, is_check,
+      is_delete, create_time, modify_time, im_text, im_role_id)
+    values (#{imFatherId,jdbcType=INTEGER}, #{imFromId,jdbcType=INTEGER}, 2, 1, now(), now(), #{imText}, #{imRoleId})
+  </insert>
+
+  <insert id="insertGroup">
+    insert into algorithm.information (im_father_id, im_from_id, is_check, im_role_id, is_delete, create_time, modify_time)
+    values
+    <foreach collection="fromId" item="imFromId" separator=",">
+           (#{fatherId,jdbcType=INTEGER}, #{imFromId,jdbcType=INTEGER}, 2, 1, 1,now(), now())
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.Information">
+    update algorithm.information
+    <set>
+      <if test="imFatherId != null">
+        im_father_id = #{imFatherId,jdbcType=INTEGER},
+      </if>
+      <if test="imFromId != null">
+        im_from_id = #{imFromId,jdbcType=INTEGER},
+      </if>
+      <if test="isCheck != null">
+        is_check = #{isCheck,jdbcType=BOOLEAN},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where im_id = #{imId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Information">
+    update algorithm.information
+    set im_father_id = #{imFatherId,jdbcType=INTEGER},
+      im_from_id = #{imFromId,jdbcType=INTEGER},
+      is_check = #{isCheck,jdbcType=BOOLEAN},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where im_id = #{imId,jdbcType=INTEGER}
+  </update>
+  <update id="checkByPrimaryKey">
+    update algorithm.information
+    set  is_check = 1
+    where im_id = #{messageId,jdbcType=INTEGER}
+    and is_delete = 1
+  </update>
+</mapper>

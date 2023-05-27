@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.PictureMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Picture">
+    <id column="pt_id" jdbcType="INTEGER" property="ptId" />
+    <result column="pt_meta_name" jdbcType="VARCHAR" property="ptMetaName" />
+    <result column="pt_name" jdbcType="VARCHAR" property="ptName" />
+    <result column="pt_type" jdbcType="VARCHAR" property="ptType" />
+    <result column="pt_path_id" jdbcType="INTEGER" property="ptPathId" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pt_id, pt_meta_name, pt_name, pt_type, pt_path_id, is_delete, create_time, modify_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.picture
+    where pt_id = #{ptId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.picture
+    where pt_name = #{uuid,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.picture
+    where pt_id = #{ptId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" keyColumn="pt_id" keyProperty="ptId" parameterType="com.example.algorithm.domain.po.Picture" useGeneratedKeys="true">
+    insert into algorithm.picture (pt_meta_name, pt_name, pt_type,
+      pt_path_id, is_delete, create_time, 
+      modify_time)
+    values (#{ptMetaName,jdbcType=VARCHAR}, #{ptName,jdbcType=VARCHAR}, #{ptType,jdbcType=VARCHAR}, 
+      #{ptPathId,jdbcType=INTEGER}, 1, now(), now())
+  </insert>
+
+  <insert id="insertSelective" keyColumn="pt_id" keyProperty="ptId" parameterType="com.example.algorithm.domain.po.Picture" useGeneratedKeys="true">
+    insert into algorithm.picture
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ptMetaName != null">
+        pt_meta_name,
+      </if>
+      <if test="ptName != null">
+        pt_name,
+      </if>
+      <if test="ptType != null">
+        pt_type,
+      </if>
+      <if test="ptPathId != null">
+        pt_path_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ptMetaName != null">
+        #{ptMetaName,jdbcType=VARCHAR},
+      </if>
+      <if test="ptName != null">
+        #{ptName,jdbcType=VARCHAR},
+      </if>
+      <if test="ptType != null">
+        #{ptType,jdbcType=VARCHAR},
+      </if>
+      <if test="ptPathId != null">
+        #{ptPathId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.Picture">
+    update algorithm.picture
+    <set>
+      <if test="ptMetaName != null">
+        pt_meta_name = #{ptMetaName,jdbcType=VARCHAR},
+      </if>
+      <if test="ptName != null">
+        pt_name = #{ptName,jdbcType=VARCHAR},
+      </if>
+      <if test="ptType != null">
+        pt_type = #{ptType,jdbcType=VARCHAR},
+      </if>
+      <if test="ptPathId != null">
+        pt_path_id = #{ptPathId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where pt_id = #{ptId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Picture">
+    update algorithm.picture
+    set pt_meta_name = #{ptMetaName,jdbcType=VARCHAR},
+      pt_name = #{ptName,jdbcType=VARCHAR},
+      pt_type = #{ptType,jdbcType=VARCHAR},
+      pt_path_id = #{ptPathId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where pt_id = #{ptId,jdbcType=INTEGER}
+  </update>
+</mapper>

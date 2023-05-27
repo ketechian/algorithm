@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.HyperlinksMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Hyperlinks">
+    <id column="hl_id" jdbcType="INTEGER" property="hlId" />
+    <result column="hl_content" jdbcType="VARCHAR" property="hlContent" />
+    <result column="hl_information" jdbcType="VARCHAR" property="hlInformation" />
+    <result column="hl_status" jdbcType="BOOLEAN" property="hlStatus" />
+    <result column="hl_role_id" jdbcType="INTEGER" property="hlRoleId" />
+    <result column="hl_user_id" jdbcType="INTEGER" property="hlUserId" />
+    <result column="hl_examine_id" jdbcType="INTEGER" property="hlExamineId" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    hl_id, hl_content, hl_information, hl_status, hl_role_id, hl_user_id, hl_examine_id, 
+    is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.hyperlinks
+    where hl_id = #{hlId,jdbcType=INTEGER}
+  </select>
+  <select id="selectBytText" resultType="com.example.algorithm.domain.po.Hyperlinks">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.hyperlinks
+    where hl_content = #{topicHyperlink,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.hyperlinks
+    where hl_id = #{hlId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="hl_id" keyProperty="hlId" parameterType="com.example.algorithm.domain.po.Hyperlinks" useGeneratedKeys="true">
+    <selectKey keyProperty="hlId" order="AFTER" resultType="Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into algorithm.hyperlinks (hl_content, hl_information, hl_status, hl_role_id,
+    hl_user_id, hl_examine_id, is_delete,
+    create_time, modify_time)
+    values (#{hlContent,jdbcType=VARCHAR}, #{hlInformation,jdbcType=VARCHAR}, #{hlStatus,jdbcType=VARCHAR},
+    #{hlRoleId,jdbcType=INTEGER}, #{hlUserId,jdbcType=INTEGER}, #{hlExamineId,jdbcType=INTEGER}, 1, now(), now())
+  </insert>
+  <insert id="insertSelective" keyColumn="hl_id" keyProperty="hlId" parameterType="com.example.algorithm.domain.po.Hyperlinks" useGeneratedKeys="true">
+    insert into algorithm.hyperlinks
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="hlContent != null">
+        hl_content,
+      </if>
+      <if test="hlInformation != null">
+        hl_information,
+      </if>
+      <if test="hlStatus != null">
+        hl_status,
+      </if>
+      <if test="hlRoleId != null">
+        hl_role_id,
+      </if>
+      <if test="hlUserId != null">
+        hl_user_id,
+      </if>
+      <if test="hlExamineId != null">
+        hl_examine_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="hlContent != null">
+        #{hlContent,jdbcType=VARCHAR},
+      </if>
+      <if test="hlInformation != null">
+        #{hlInformation,jdbcType=VARCHAR},
+      </if>
+      <if test="hlStatus != null">
+        #{hlStatus,jdbcType=BOOLEAN},
+      </if>
+      <if test="hlRoleId != null">
+        #{hlRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="hlUserId != null">
+        #{hlUserId,jdbcType=INTEGER},
+      </if>
+      <if test="hlExamineId != null">
+        #{hlExamineId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.Hyperlinks">
+    update algorithm.hyperlinks
+    <set>
+      <if test="hlContent != null">
+        hl_content = #{hlContent,jdbcType=VARCHAR},
+      </if>
+      <if test="hlInformation != null">
+        hl_information = #{hlInformation,jdbcType=VARCHAR},
+      </if>
+      <if test="hlStatus != null">
+        hl_status = #{hlStatus,jdbcType=BOOLEAN},
+      </if>
+      <if test="hlRoleId != null">
+        hl_role_id = #{hlRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="hlUserId != null">
+        hl_user_id = #{hlUserId,jdbcType=INTEGER},
+      </if>
+      <if test="hlExamineId != null">
+        hl_examine_id = #{hlExamineId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where hl_id = #{hlId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Hyperlinks">
+    update algorithm.hyperlinks
+    set hl_content = #{hlContent,jdbcType=VARCHAR},
+      hl_information = #{hlInformation,jdbcType=VARCHAR},
+      hl_status = #{hlStatus,jdbcType=BOOLEAN},
+      hl_role_id = #{hlRoleId,jdbcType=INTEGER},
+      hl_user_id = #{hlUserId,jdbcType=INTEGER},
+      hl_examine_id = #{hlExamineId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where hl_id = #{hlId,jdbcType=INTEGER}
+  </update>
+</mapper>

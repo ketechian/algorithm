@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.StudentAnswerMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.StudentAnswer">
+    <id column="sa_id" jdbcType="INTEGER" property="saId" />
+    <result column="sa_student_id" jdbcType="INTEGER" property="saStudentId" />
+    <result column="sa_task_id" jdbcType="INTEGER" property="saTaskId" />
+    <result column="sa_topic_id" jdbcType="INTEGER" property="saTopicId" />
+    <result column="sa_picture_id" jdbcType="INTEGER" property="saPictureId" />
+    <result column="sa_answer" jdbcType="VARCHAR" property="saAnswer" />
+    <result column="sa_examine_id" jdbcType="INTEGER" property="saExamineId" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sa_id, sa_student_id, sa_task_id, sa_topic_id, sa_picture_id, sa_answer, sa_examine_id, 
+    is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.student_answer
+    where sa_id = #{saId,jdbcType=INTEGER}
+    and is_delete = 1
+  </select>
+  <select id="selectByTaskAndStudentId" resultType="com.example.algorithm.domain.po.StudentAnswer">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.student_answer
+    where sa_student_id = #{studentId,jdbcType=INTEGER}
+    and sa_task_id = #{taskId,jdbcType=INTEGER}
+    and is_delete = 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.student_answer
+    where sa_id = #{saId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="sa_id" keyProperty="saId" parameterType="com.example.algorithm.domain.po.StudentAnswer" useGeneratedKeys="true">
+    <selectKey keyProperty="saId" order="AFTER" resultType="Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert algorithm.student_answer (sa_student_id, sa_task_id, sa_topic_id,
+      sa_picture_id, sa_answer, sa_examine_id, 
+      is_delete, create_time, modify_time
+      )
+    values (#{saStudentId,jdbcType=INTEGER}, #{saTaskId,jdbcType=INTEGER}, #{saTopicId,jdbcType=INTEGER}, 
+      #{saPictureId,jdbcType=INTEGER}, #{saAnswer,jdbcType=VARCHAR}, #{saExamineId,jdbcType=INTEGER}, 
+      1, now(), now()
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.StudentAnswer">
+    update algorithm.student_answer
+    set sa_student_id = #{saStudentId,jdbcType=INTEGER},
+      sa_task_id = #{saTaskId,jdbcType=INTEGER},
+      sa_topic_id = #{saTopicId,jdbcType=INTEGER},
+      sa_picture_id = #{saPictureId,jdbcType=INTEGER},
+      sa_answer = #{saAnswer,jdbcType=VARCHAR},
+      sa_examine_id = #{saExamineId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where sa_id = #{saId,jdbcType=INTEGER}
+  </update>
+</mapper>

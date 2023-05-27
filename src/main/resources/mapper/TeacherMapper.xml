@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.TeacherMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Teacher">
+    <id column="t_id" jdbcType="INTEGER" property="tId" />
+    <result column="t_name" jdbcType="VARCHAR" property="tName" />
+    <result column="t_gender" jdbcType="BOOLEAN" property="tGender" />
+    <result column="t_age" jdbcType="INTEGER" property="tAge" />
+    <result column="t_phone" jdbcType="VARCHAR" property="tPhone" />
+    <result column="t_password" jdbcType="VARCHAR" property="tPassword" />
+    <result column="t_qq" jdbcType="VARCHAR" property="tQq" />
+    <result column="t_wx" jdbcType="VARCHAR" property="tWx" />
+    <result column="t_mailbox" jdbcType="VARCHAR" property="tMailbox" />
+    <result column="t_introduce" jdbcType="VARCHAR" property="tIntroduce" />
+    <result column="t_picture_id" jdbcType="INTEGER" property="tPictureId" />
+    <result column="t_role_id" jdbcType="INTEGER" property="tRoleId" />
+    <result column="t_empower_id" jdbcType="INTEGER" property="tEmpowerId" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    t_id, t_name, t_gender, t_age, t_phone, t_password, t_qq, t_wx, t_mailbox, t_introduce, 
+    t_picture_id, t_role_id, t_empower_id, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.teacher
+    where t_id = #{tId,jdbcType=INTEGER}
+  </select>
+  <select id="teacherLogin" resultType="com.example.algorithm.domain.po.Teacher">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.teacher
+    where t_phone = #{tPhone,jdbcType=INTEGER}
+    and t_password = #{tPassword,jdbcType=INTEGER}
+    and is_delete = 1
+  </select>
+    <select id="selectAll" resultType="java.lang.Integer">
+      select t_id
+      from algorithm.teacher
+      where is_delete = #{isDeleteNum,jdbcType=INTEGER}
+      and is_delete = 1
+    </select>
+    <select id="selectByPathNameId" resultType="com.example.algorithm.domain.vo.TeacherVo">
+      select
+      <include refid="Base_Column_List" />
+      from algorithm.teacher
+      where t_id = #{tId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.teacher
+    where t_id = #{tId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="t_id" keyProperty="tId" parameterType="com.example.algorithm.domain.po.Teacher" useGeneratedKeys="true">
+    insert into algorithm.teacher (t_name, t_gender, t_age,
+      t_phone, t_password, t_qq, 
+      t_wx, t_mailbox, t_introduce, 
+      t_picture_id, t_role_id, t_empower_id, 
+      is_delete, create_time, modify_time
+      )
+    values (#{tName,jdbcType=VARCHAR}, #{tGender,jdbcType=BOOLEAN}, #{tAge,jdbcType=INTEGER}, 
+      #{tPhone,jdbcType=VARCHAR}, #{tPassword,jdbcType=VARCHAR}, #{tQq,jdbcType=VARCHAR}, 
+      #{tWx,jdbcType=VARCHAR}, #{tMailbox,jdbcType=VARCHAR}, #{tIntroduce,jdbcType=VARCHAR}, 
+      #{tPictureId,jdbcType=INTEGER}, #{tRoleId,jdbcType=INTEGER}, #{tEmpowerId,jdbcType=INTEGER}, 
+      1, now(), now()
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="t_id" keyProperty="tId" parameterType="com.example.algorithm.domain.po.Teacher" useGeneratedKeys="true">
+    insert into algorithm.teacher
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tName != null">
+        t_name,
+      </if>
+      <if test="tGender != null">
+        t_gender,
+      </if>
+      <if test="tAge != null">
+        t_age,
+      </if>
+      <if test="tPhone != null">
+        t_phone,
+      </if>
+      <if test="tPassword != null">
+        t_password,
+      </if>
+      <if test="tQq != null">
+        t_qq,
+      </if>
+      <if test="tWx != null">
+        t_wx,
+      </if>
+      <if test="tMailbox != null">
+        t_mailbox,
+      </if>
+      <if test="tIntroduce != null">
+        t_introduce,
+      </if>
+      <if test="tPictureId != null">
+        t_picture_id,
+      </if>
+      <if test="tRoleId != null">
+        t_role_id,
+      </if>
+      <if test="tEmpowerId != null">
+        t_empower_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tName != null">
+        #{tName,jdbcType=VARCHAR},
+      </if>
+      <if test="tGender != null">
+        #{tGender,jdbcType=BOOLEAN},
+      </if>
+      <if test="tAge != null">
+        #{tAge,jdbcType=INTEGER},
+      </if>
+      <if test="tPhone != null">
+        #{tPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tPassword != null">
+        #{tPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="tQq != null">
+        #{tQq,jdbcType=VARCHAR},
+      </if>
+      <if test="tWx != null">
+        #{tWx,jdbcType=VARCHAR},
+      </if>
+      <if test="tMailbox != null">
+        #{tMailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="tIntroduce != null">
+        #{tIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="tPictureId != null">
+        #{tPictureId,jdbcType=INTEGER},
+      </if>
+      <if test="tRoleId != null">
+        #{tRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="tEmpowerId != null">
+        #{tEmpowerId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.Teacher">
+    update algorithm.teacher
+    <set>
+      <if test="tName != null">
+        t_name = #{tName,jdbcType=VARCHAR},
+      </if>
+      <if test="tGender != null">
+        t_gender = #{tGender,jdbcType=BOOLEAN},
+      </if>
+      <if test="tAge != null">
+        t_age = #{tAge,jdbcType=INTEGER},
+      </if>
+      <if test="tPhone != null">
+        t_phone = #{tPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tPassword != null">
+        t_password = #{tPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="tQq != null">
+        t_qq = #{tQq,jdbcType=VARCHAR},
+      </if>
+      <if test="tWx != null">
+        t_wx = #{tWx,jdbcType=VARCHAR},
+      </if>
+      <if test="tMailbox != null">
+        t_mailbox = #{tMailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="tIntroduce != null">
+        t_introduce = #{tIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="tPictureId != null">
+        t_picture_id = #{tPictureId,jdbcType=INTEGER},
+      </if>
+      <if test="tRoleId != null">
+        t_role_id = #{tRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="tEmpowerId != null">
+        t_empower_id = #{tEmpowerId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where t_id = #{tId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Teacher">
+    update algorithm.teacher
+    set t_name = #{tName,jdbcType=VARCHAR},
+      t_gender = #{tGender,jdbcType=BOOLEAN},
+      t_age = #{tAge,jdbcType=INTEGER},
+      t_phone = #{tPhone,jdbcType=VARCHAR},
+      t_qq = #{tQq,jdbcType=VARCHAR},
+      t_wx = #{tWx,jdbcType=VARCHAR},
+      t_mailbox = #{tMailbox,jdbcType=VARCHAR},
+      t_introduce = #{tIntroduce,jdbcType=VARCHAR},
+      t_picture_id = #{tPictureId,jdbcType=INTEGER},
+      modify_time = now()
+    where t_id = #{tId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.TopicMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Topic">
+    <id column="tp_id" jdbcType="INTEGER" property="tpId" />
+    <result column="tp_name" jdbcType="VARCHAR" property="tpName" />
+    <result column="tp_type" jdbcType="BOOLEAN" property="tpType" />
+    <result column="tp_picture_id" jdbcType="INTEGER" property="tpPictureId" />
+    <result column="tp_hyperlinks_id" jdbcType="INTEGER" property="tpHyperlinksId" />
+    <result column="tp_text" jdbcType="VARCHAR" property="tpText" />
+    <result column="tp_option" jdbcType="VARCHAR" property="tpOption" />
+    <result column="tp_answer" jdbcType="VARCHAR" property="tpAnswer" />
+    <result column="tp_tag" jdbcType="VARCHAR" property="tpTag" />
+    <result column="tp_teacher_id" jdbcType="INTEGER" property="tpTeacherId" />
+    <result column="tp_persons" jdbcType="INTEGER" property="tpPersons" />
+    <result column="tp_right_persons" jdbcType="INTEGER" property="tpRightPersons" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    tp_id, tp_name, tp_type, tp_picture_id, tp_hyperlinks_id, tp_text, tp_option, tp_answer, 
+    tp_tag, tp_teacher_id, tp_persons, tp_right_persons, is_delete, create_time, modify_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.topic
+    where tp_id = #{tpId,jdbcType=INTEGER}
+  </select>
+    <select id="selectAllTopic" resultType="com.example.algorithm.domain.vo.TopicAllVo">
+      select
+      <include refid="Base_Column_List" />
+      from algorithm.topic
+      where is_delete = 1
+      order by create_time desc
+    </select>
+  <select id="selectTopic" resultType="com.example.algorithm.domain.vo.TopicVo">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.topic
+    where tp_id = #{topicId,jdbcType=INTEGER}
+    and is_delete = 1
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.topic
+    where tp_id = #{tpId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" keyColumn="tp_id" keyProperty="tpId" parameterType="com.example.algorithm.domain.po.Topic" useGeneratedKeys="true">
+    insert into algorithm.topic (tp_name, tp_type, tp_picture_id,
+      tp_hyperlinks_id, tp_text, tp_option, 
+      tp_answer, tp_tag, tp_teacher_id, 
+      tp_persons, tp_right_persons, is_delete, 
+      create_time, modify_time)
+    values (#{tpName,jdbcType=VARCHAR}, #{tpType,jdbcType=BOOLEAN}, #{tpPictureId,jdbcType=INTEGER}, 
+      #{tpHyperlinksId,jdbcType=INTEGER}, #{tpText,jdbcType=VARCHAR}, #{tpOption,jdbcType=VARCHAR}, 
+      #{tpAnswer,jdbcType=VARCHAR}, #{tpTag,jdbcType=VARCHAR}, #{tpTeacherId,jdbcType=INTEGER}, 
+      0, 0, 1, now(), now())
+
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Topic">
+    update algorithm.topic
+    set tp_name = #{tpName,jdbcType=VARCHAR},
+      tp_type = #{tpType,jdbcType=BOOLEAN},
+      tp_picture_id = #{tpPictureId,jdbcType=INTEGER},
+      tp_hyperlinks_id = #{tpHyperlinksId,jdbcType=INTEGER},
+      tp_text = #{tpText,jdbcType=VARCHAR},
+      tp_option = #{tpOption,jdbcType=VARCHAR},
+      tp_answer = #{tpAnswer,jdbcType=VARCHAR},
+      tp_tag = #{tpTag,jdbcType=VARCHAR},
+      tp_teacher_id = #{tpTeacherId,jdbcType=INTEGER},
+      tp_persons = #{tpPersons,jdbcType=INTEGER},
+      tp_right_persons = #{tpRightPersons,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where tp_id = #{tpId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateRight">
+    update algorithm.topic
+    set tp_persons = tp_persons + 1,
+        tp_right_persons = tp_right_persons + 1
+    where tp_id = #{topicId}
+    and is_delete = 1
+  </update>
+
+  <update id="updateError">
+    update algorithm.topic
+    set tp_persons = tp_persons + 1
+    where tp_id = #{topicId}
+      and is_delete = 1
+  </update>
+</mapper>

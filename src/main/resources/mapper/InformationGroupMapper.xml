@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.InformationGroupMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.InformationGroup">
+    <id column="ig_id" jdbcType="INTEGER" property="igId" />
+    <result column="ig_content" jdbcType="VARCHAR" property="igContent" />
+    <result column="ig_for_id" jdbcType="INTEGER" property="igForId" />
+    <result column="ig_role_id" jdbcType="INTEGER" property="igRoleId" />
+    <result column="ig_from_all" jdbcType="BOOLEAN" property="igFromAll" />
+    <result column="ig_from_class" jdbcType="INTEGER" property="igFromClass" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ig_id, ig_content, ig_for_id, ig_role_id, ig_from_all, ig_from_class, is_delete, 
+    create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.information_group
+    where ig_id = #{igId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.information_group
+    where ig_id = #{igId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ig_id" keyProperty="igId" parameterType="com.example.algorithm.domain.po.InformationGroup" useGeneratedKeys="true">
+    <selectKey keyProperty="igId" order="AFTER" resultType="Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into algorithm.information_group (ig_content, ig_for_id, ig_role_id,
+      ig_from_all, ig_from_class, is_delete, 
+      create_time, modify_time)
+    values (#{igContent,jdbcType=VARCHAR}, #{igForId,jdbcType=INTEGER}, #{igRoleId,jdbcType=INTEGER}, 
+      #{igFromAll,jdbcType=BOOLEAN}, #{igFromClass,jdbcType=INTEGER}, 1, now(), now())
+  </insert>
+  <insert id="insertSelective" keyColumn="ig_id" keyProperty="igId" parameterType="com.example.algorithm.domain.po.InformationGroup" useGeneratedKeys="true">
+    insert into algorithm.information_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="igContent != null">
+        ig_content,
+      </if>
+      <if test="igForId != null">
+        ig_for_id,
+      </if>
+      <if test="igRoleId != null">
+        ig_role_id,
+      </if>
+      <if test="igFromAll != null">
+        ig_from_all,
+      </if>
+      <if test="igFromClass != null">
+        ig_from_class,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="igContent != null">
+        #{igContent,jdbcType=VARCHAR},
+      </if>
+      <if test="igForId != null">
+        #{igForId,jdbcType=INTEGER},
+      </if>
+      <if test="igRoleId != null">
+        #{igRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="igFromAll != null">
+        #{igFromAll,jdbcType=BOOLEAN},
+      </if>
+      <if test="igFromClass != null">
+        #{igFromClass,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.InformationGroup">
+    update algorithm.information_group
+    <set>
+      <if test="igContent != null">
+        ig_content = #{igContent,jdbcType=VARCHAR},
+      </if>
+      <if test="igForId != null">
+        ig_for_id = #{igForId,jdbcType=INTEGER},
+      </if>
+      <if test="igRoleId != null">
+        ig_role_id = #{igRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="igFromAll != null">
+        ig_from_all = #{igFromAll,jdbcType=BOOLEAN},
+      </if>
+      <if test="igFromClass != null">
+        ig_from_class = #{igFromClass,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ig_id = #{igId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.InformationGroup">
+    update algorithm.information_group
+    set ig_content = #{igContent,jdbcType=VARCHAR},
+      ig_for_id = #{igForId,jdbcType=INTEGER},
+      ig_role_id = #{igRoleId,jdbcType=INTEGER},
+      ig_from_all = #{igFromAll,jdbcType=BOOLEAN},
+      ig_from_class = #{igFromClass,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where ig_id = #{igId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.TopicStatisticsMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.TopicStatistics">
+    <id column="ts_id" jdbcType="INTEGER" property="tsId" />
+    <result column="ts_task_id" jdbcType="INTEGER" property="tsTaskId" />
+    <result column="ts_topic_id" jdbcType="INTEGER" property="tsTopicId" />
+    <result column="ts_topic_right" jdbcType="INTEGER" property="tsTopicRight" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ts_id, ts_task_id, ts_topic_id, ts_topic_right, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.topic_statistics
+    where ts_id = #{tsId,jdbcType=INTEGER}
+  </select>
+    <select id="select" resultType="com.example.algorithm.domain.po.TopicStatistics">
+      select
+      <include refid="Base_Column_List" />
+      from algorithm.topic_statistics
+      where ts_task_id = #{taskId,jdbcType=INTEGER}
+      and ts_topic_id = #{topicId,jdbcType=INTEGER}
+      and is_delete = 1
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.topic_statistics
+    where ts_id = #{tsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ts_id" keyProperty="tsId" parameterType="com.example.algorithm.domain.po.TopicStatistics" useGeneratedKeys="true">
+    <selectKey keyProperty="tsId" order="AFTER" resultType="Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into algorithm.topic_statistics (ts_task_id, ts_topic_id, ts_topic_right,
+      is_delete, create_time, modify_time
+      )
+    values (#{tsTaskId,jdbcType=INTEGER}, #{tsTopicId,jdbcType=INTEGER}, 0,
+      1, now(), now())
+  </insert>
+  <insert id="insertSelective" keyColumn="ts_id" keyProperty="tsId" parameterType="com.example.algorithm.domain.po.TopicStatistics" useGeneratedKeys="true">
+    insert into algorithm.topic_statistics
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tsTaskId != null">
+        ts_task_id,
+      </if>
+      <if test="tsTopicId != null">
+        ts_topic_id,
+      </if>
+      <if test="tsTopicRight != null">
+        ts_topic_right,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tsTaskId != null">
+        #{tsTaskId,jdbcType=INTEGER},
+      </if>
+      <if test="tsTopicId != null">
+        #{tsTopicId,jdbcType=INTEGER},
+      </if>
+      <if test="tsTopicRight != null">
+        #{tsTopicRight,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.TopicStatistics">
+    update algorithm.topic_statistics
+    <set>
+      <if test="tsTaskId != null">
+        ts_task_id = #{tsTaskId,jdbcType=INTEGER},
+      </if>
+      <if test="tsTopicId != null">
+        ts_topic_id = #{tsTopicId,jdbcType=INTEGER},
+      </if>
+      <if test="tsTopicRight != null">
+        ts_topic_right = #{tsTopicRight,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ts_id = #{tsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.TopicStatistics">
+    update algorithm.topic_statistics
+    set ts_task_id = #{tsTaskId,jdbcType=INTEGER},
+      ts_topic_id = #{tsTopicId,jdbcType=INTEGER},
+      ts_topic_right = #{tsTopicRight,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where ts_id = #{tsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateRight">
+    update algorithm.topic_statistics
+    set
+      ts_topic_right = ts_topic_right + 1
+    where is_delete = 1
+  </update>
+</mapper>

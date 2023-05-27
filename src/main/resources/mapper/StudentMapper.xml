@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.StudentMapper">
+    <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Student">
+        <id column="st_id" jdbcType="INTEGER" property="stId"/>
+        <result column="st_number" jdbcType="VARCHAR" property="stNumber"/>
+        <result column="st_name" jdbcType="VARCHAR" property="stName"/>
+        <result column="st_gender" jdbcType="BOOLEAN" property="stGender"/>
+        <result column="st_age" jdbcType="INTEGER" property="stAge"/>
+        <result column="st_phone" jdbcType="VARCHAR" property="stPhone"/>
+        <result column="st_password" jdbcType="VARCHAR" property="stPassword"/>
+        <result column="st_qq" jdbcType="VARCHAR" property="stQq"/>
+        <result column="st_wx" jdbcType="VARCHAR" property="stWx"/>
+        <result column="st_mailbox" jdbcType="VARCHAR" property="stMailbox"/>
+        <result column="st_picture_id" jdbcType="INTEGER" property="stPictureId"/>
+        <result column="st_role_id" jdbcType="INTEGER" property="stRoleId"/>
+        <result column="st_empower_id" jdbcType="INTEGER" property="stEmpowerId"/>
+        <result column="is_delete" jdbcType="BOOLEAN" property="isDelete"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        st_id, st_name, st_number,st_gender, st_age, st_phone, st_password, st_qq, st_wx,
+    st_mailbox, st_picture_id, st_role_id, st_empower_id, is_delete, create_time, modify_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from algorithm.student
+        where st_id = #{stId,jdbcType=INTEGER}
+    </select>
+    <select id="studentLogin" resultType="com.example.algorithm.domain.po.Student">
+        select
+        <include refid="Base_Column_List"/>
+        from algorithm.student
+        where st_phone = #{stPhone,jdbcType=INTEGER}
+        AND st_password = #{stPassword,jdbcType=INTEGER}
+    </select>
+    <select id="selectAll" resultType="java.lang.Integer">
+        select st_id
+        from algorithm.student
+        where is_delete = #{isDeleteNum,jdbcType=INTEGER}
+    </select>
+    <select id="selectById" resultType="com.example.algorithm.domain.po.Student">
+        select
+        <include refid="Base_Column_List"/>
+        from algorithm.student
+        where is_delete = 1
+        and st_id in
+        <foreach collection="studentId"  item="item" index ="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        LIMIT #{start},#{count}
+    </select>
+    <select id="selectByPathNameId" resultType="com.example.algorithm.domain.vo.StudentVo">
+        select
+        <include refid="Base_Column_List"/>
+        from algorithm.student
+        where st_id = #{stId,jdbcType=INTEGER}
+        and is_delete = 1
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from algorithm.student
+        where st_id = #{stId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="st_id" keyProperty="stId" parameterType="com.example.algorithm.domain.po.Student"
+            useGeneratedKeys="true">
+      <selectKey keyProperty="stId" order="AFTER" resultType="Integer">
+        SELECT LAST_INSERT_ID()
+      </selectKey>
+        insert into algorithm.student (st_number, st_name, st_gender,
+                                       st_age, st_phone, st_password,
+                                       st_qq, st_wx, st_mailbox,
+                                       st_picture_id, st_role_id, st_empower_id,
+                                       is_delete, create_time, modify_time)
+        values (#{stNumber,jdbcType=VARCHAR}, #{stName,jdbcType=VARCHAR}, #{stGender,jdbcType=BOOLEAN},
+                #{stAge,jdbcType=INTEGER}, #{stPhone,jdbcType=VARCHAR}, #{stPassword,jdbcType=VARCHAR},
+                #{stQq,jdbcType=VARCHAR}, #{stWx,jdbcType=VARCHAR}, #{stMailbox,jdbcType=VARCHAR},
+                #{stPictureId,jdbcType=INTEGER}, #{stRoleId,jdbcType=INTEGER}, #{stEmpowerId,jdbcType=INTEGER},
+                1, now(), now())
+    </insert>
+    <insert id="insertSelective" keyColumn="st_id" keyProperty="stId"
+            parameterType="com.example.algorithm.domain.po.Student" useGeneratedKeys="true">
+        insert into algorithm.student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stNumber != null">
+                st_number,
+            </if>
+            <if test="stName != null">
+                st_name,
+            </if>
+            <if test="stGender != null">
+                st_gender,
+            </if>
+            <if test="stAge != null">
+                st_age,
+            </if>
+            <if test="stPhone != null">
+                st_phone,
+            </if>
+            <if test="stPassword != null">
+                st_password,
+            </if>
+            <if test="stQq != null">
+                st_qq,
+            </if>
+            <if test="stWx != null">
+                st_wx,
+            </if>
+            <if test="stMailbox != null">
+                st_mailbox,
+            </if>
+            <if test="stPictureId != null">
+                st_picture_id,
+            </if>
+            <if test="stRoleId != null">
+                st_role_id,
+            </if>
+            <if test="stEmpowerId != null">
+                st_empower_id,
+            </if>
+            <if test="isDelete != null">
+                is_delete,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stNumber != null">
+                #{stNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="stName != null">
+                #{stName,jdbcType=VARCHAR},
+            </if>
+            <if test="stGender != null">
+                #{stGender,jdbcType=BOOLEAN},
+            </if>
+            <if test="stAge != null">
+                #{stAge,jdbcType=INTEGER},
+            </if>
+            <if test="stPhone != null">
+                #{stPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="stPassword != null">
+                #{stPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="stQq != null">
+                #{stQq,jdbcType=VARCHAR},
+            </if>
+            <if test="stWx != null">
+                #{stWx,jdbcType=VARCHAR},
+            </if>
+            <if test="stMailbox != null">
+                #{stMailbox,jdbcType=VARCHAR},
+            </if>
+            <if test="stPictureId != null">
+                #{stPictureId,jdbcType=INTEGER},
+            </if>
+            <if test="stRoleId != null">
+                #{stRoleId,jdbcType=INTEGER},
+            </if>
+            <if test="stEmpowerId != null">
+                #{stEmpowerId,jdbcType=INTEGER},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete,jdbcType=BOOLEAN},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.Student">
+        update algorithm.student
+        <set>
+            <if test="stNumber != null">
+                st_number = #{stNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="stName != null">
+                st_name = #{stName,jdbcType=VARCHAR},
+            </if>
+            <if test="stGender != null">
+                st_gender = #{stGender,jdbcType=BOOLEAN},
+            </if>
+            <if test="stAge != null">
+                st_age = #{stAge,jdbcType=INTEGER},
+            </if>
+            <if test="stPhone != null">
+                st_phone = #{stPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="stPassword != null">
+                st_password = #{stPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="stQq != null">
+                st_qq = #{stQq,jdbcType=VARCHAR},
+            </if>
+            <if test="stWx != null">
+                st_wx = #{stWx,jdbcType=VARCHAR},
+            </if>
+            <if test="stMailbox != null">
+                st_mailbox = #{stMailbox,jdbcType=VARCHAR},
+            </if>
+            <if test="stPictureId != null">
+                st_picture_id = #{stPictureId,jdbcType=INTEGER},
+            </if>
+            <if test="stRoleId != null">
+                st_role_id = #{stRoleId,jdbcType=INTEGER},
+            </if>
+            <if test="stEmpowerId != null">
+                st_empower_id = #{stEmpowerId,jdbcType=INTEGER},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete,jdbcType=BOOLEAN},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where st_id = #{stId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Student">
+        update algorithm.student
+        set st_number     = #{stNumber,jdbcType=VARCHAR},
+            st_name       = #{stName,jdbcType=VARCHAR},
+            st_gender     = #{stGender,jdbcType=BOOLEAN},
+            st_age        = #{stAge,jdbcType=INTEGER},
+            st_phone      = #{stPhone,jdbcType=VARCHAR},
+            st_qq         = #{stQq,jdbcType=VARCHAR},
+            st_wx         = #{stWx,jdbcType=VARCHAR},
+            st_mailbox    = #{stMailbox,jdbcType=VARCHAR},
+            st_picture_id = #{stPictureId,jdbcType=INTEGER},
+            modify_time   = #{modifyTime,jdbcType=TIMESTAMP}
+        where st_id = #{stId,jdbcType=INTEGER}
+    </update>
+</mapper>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.algorithm.mapper.CommentMapper">
+  <resultMap id="BaseResultMap" type="com.example.algorithm.domain.po.Comment">
+    <id column="cm_id" jdbcType="INTEGER" property="cmId" />
+    <result column="cm_topic_id" jdbcType="INTEGER" property="cmTopicId" />
+    <result column="cm_user_id" jdbcType="INTEGER" property="cmUserId" />
+    <result column="cm_user_role" jdbcType="INTEGER" property="cmUserRole" />
+    <result column="cm_floor" jdbcType="INTEGER" property="cmFloor" />
+    <result column="cm_d_floor" jdbcType="INTEGER" property="cmDFloor" />
+    <result column="cm_reply" jdbcType="INTEGER" property="cmReply" />
+    <result column="cm_content" jdbcType="VARCHAR" property="cmContent" />
+    <result column="cm_likes" jdbcType="INTEGER" property="cmLikes" />
+    <result column="cm_unlikes" jdbcType="INTEGER" property="cmUnlikes" />
+    <result column="is_delete" jdbcType="BOOLEAN" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    cm_id, cm_topic_id, cm_user_id, cm_user_role, cm_floor, cm_d_floor, cm_reply, cm_content, 
+    cm_likes, cm_unlikes, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from algorithm.comment
+    where cm_id = #{cmId,jdbcType=INTEGER}
+  </select>
+  <select id="countComment" resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM  algorithm.comment
+    WHERE cm_topic_id = #{topicId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByTopicId" resultType="com.example.algorithm.domain.po.Comment">
+    select
+    <include refid="Base_Column_List" />
+    from algorithm.comment
+    where cm_topic_id = #{topicId,jdbcType=INTEGER}
+    and is_delete = 1
+    LIMIT #{start},#{count}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm.comment
+    where cm_id = #{cmId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="cm_id" keyProperty="cmId" parameterType="com.example.algorithm.domain.po.Comment" useGeneratedKeys="true">
+    insert into algorithm.comment (cm_topic_id, cm_user_id, cm_user_role,
+      cm_floor, cm_d_floor, cm_reply, 
+      cm_content, cm_likes, cm_unlikes, 
+      is_delete, create_time, modify_time
+      )
+    values (#{cmTopicId,jdbcType=INTEGER}, #{cmUserId,jdbcType=INTEGER}, #{cmUserRole,jdbcType=INTEGER}, 
+      #{cmFloor,jdbcType=INTEGER}, #{cmDFloor,jdbcType=INTEGER}, #{cmReply,jdbcType=INTEGER}, 
+      #{cmContent,jdbcType=VARCHAR}, #{cmLikes,jdbcType=INTEGER}, #{cmUnlikes,jdbcType=INTEGER}, 
+      1, now(), now()
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="cm_id" keyProperty="cmId" parameterType="com.example.algorithm.domain.po.Comment" useGeneratedKeys="true">
+    insert into algorithm.comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cmTopicId != null">
+        cm_topic_id,
+      </if>
+      <if test="cmUserId != null">
+        cm_user_id,
+      </if>
+      <if test="cmUserRole != null">
+        cm_user_role,
+      </if>
+      <if test="cmFloor != null">
+        cm_floor,
+      </if>
+      <if test="cmDFloor != null">
+        cm_d_floor,
+      </if>
+      <if test="cmReply != null">
+        cm_reply,
+      </if>
+      <if test="cmContent != null">
+        cm_content,
+      </if>
+      <if test="cmLikes != null">
+        cm_likes,
+      </if>
+      <if test="cmUnlikes != null">
+        cm_unlikes,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cmTopicId != null">
+        #{cmTopicId,jdbcType=INTEGER},
+      </if>
+      <if test="cmUserId != null">
+        #{cmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="cmUserRole != null">
+        #{cmUserRole,jdbcType=INTEGER},
+      </if>
+      <if test="cmFloor != null">
+        #{cmFloor,jdbcType=INTEGER},
+      </if>
+      <if test="cmDFloor != null">
+        #{cmDFloor,jdbcType=INTEGER},
+      </if>
+      <if test="cmReply != null">
+        #{cmReply,jdbcType=INTEGER},
+      </if>
+      <if test="cmContent != null">
+        #{cmContent,jdbcType=VARCHAR},
+      </if>
+      <if test="cmLikes != null">
+        #{cmLikes,jdbcType=INTEGER},
+      </if>
+      <if test="cmUnlikes != null">
+        #{cmUnlikes,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.algorithm.domain.po.Comment">
+    update algorithm.comment
+    <set>
+      <if test="cmTopicId != null">
+        cm_topic_id = #{cmTopicId,jdbcType=INTEGER},
+      </if>
+      <if test="cmUserId != null">
+        cm_user_id = #{cmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="cmUserRole != null">
+        cm_user_role = #{cmUserRole,jdbcType=INTEGER},
+      </if>
+      <if test="cmFloor != null">
+        cm_floor = #{cmFloor,jdbcType=INTEGER},
+      </if>
+      <if test="cmDFloor != null">
+        cm_d_floor = #{cmDFloor,jdbcType=INTEGER},
+      </if>
+      <if test="cmReply != null">
+        cm_reply = #{cmReply,jdbcType=INTEGER},
+      </if>
+      <if test="cmContent != null">
+        cm_content = #{cmContent,jdbcType=VARCHAR},
+      </if>
+      <if test="cmLikes != null">
+        cm_likes = #{cmLikes,jdbcType=INTEGER},
+      </if>
+      <if test="cmUnlikes != null">
+        cm_unlikes = #{cmUnlikes,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BOOLEAN},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where cm_id = #{cmId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.algorithm.domain.po.Comment">
+    update algorithm.comment
+    set cm_topic_id = #{cmTopicId,jdbcType=INTEGER},
+      cm_user_id = #{cmUserId,jdbcType=INTEGER},
+      cm_user_role = #{cmUserRole,jdbcType=INTEGER},
+      cm_floor = #{cmFloor,jdbcType=INTEGER},
+      cm_d_floor = #{cmDFloor,jdbcType=INTEGER},
+      cm_reply = #{cmReply,jdbcType=INTEGER},
+      cm_content = #{cmContent,jdbcType=VARCHAR},
+      cm_likes = #{cmLikes,jdbcType=INTEGER},
+      cm_unlikes = #{cmUnlikes,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BOOLEAN},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where cm_id = #{cmId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateLike">
+    update algorithm.comment
+    set cm_likes = cm_likes + 1
+    where cm_id = #{commentId,jdbcType=INTEGER}
+    and is_delete = 1
+  </update>
+  <update id="updateUnlike">
+    update algorithm.comment
+    set cm_unlikes = cm_unlikes + 1
+    where cm_id = #{commentId,jdbcType=INTEGER}
+      and is_delete = 1
+  </update>
+
+</mapper>
